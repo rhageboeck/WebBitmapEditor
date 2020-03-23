@@ -12,18 +12,42 @@ function clearGrid() {
 }
 
 function clickedBox(i,j) {
+    // Update Table
     bitmap.rows[i].cells[j].style.background = currColor;
+    console.log(i,j);
+
+    // Update Preview
+    var row = 0;
+    var col = 0;
+    var previewData = canvasContext.getImageData(0,0,160,160);
+    for (var index = 0; index < previewData.data.length; index += 4) {
+        if (index % 6400 == 0 && index > 0) {
+            row += 1;
+        }
+        if (index % 40 == 0 && index > 0) {
+            col += 1;
+            col %= 16;
+        }
+        if (row == i && col == j) {
+            previewData.data[index+0] = 0;
+            previewData.data[index+1] = 0;
+            previewData.data[index+2] = 0;
+            previewData.data[index+3] = 255;
+        }
+    }
+    canvasContext.putImageData(previewData,0,0);
 }
 
 // MARK: Page Header
-var pageHeader = document.createElement("header");
+// var pageHeader = document.createElement("header");
 var title = document.createElement("h1");
 title.innerHTML = "Bitmap Generator";
 title.classList.add("mb-4");
 title.style = "text-align:center;";
-pageHeader.appendChild(title);
+// pageHeader.appendChild(title);
 
-document.body.appendChild(pageHeader);
+// document.body.appendChild(pageHeader);
+document.body.appendChild(title);
 
 
 // MARK: Page Body
@@ -83,19 +107,46 @@ for (let i = 0; i < number; i++) {
 }
 pageBody.appendChild(bitmap);
 
+pageBody.appendChild(document.createElement("hr"));
 
 document.body.appendChild(pageBody);
 
+// Image Preview
+// Container
+var previewContainer = document.createElement("div");
+previewContainer.classList.add("container");
+previewContainer.style.textAlign = "center";
+// Label
+var canvasLabel = document.createElement("h2");
+canvasLabel.innerHTML = "Preview";
+previewContainer.appendChild(canvasLabel);
+// Create Canvas
+var canvas = document.createElement("canvas");
+canvas.style.borderStyle = "solid"
+canvas.style.borderColor = "grey";
+canvas.style.borderWidth = "1px";
+canvas.width = 160;
+canvas.height = 160;
+var canvasContext = canvas.getContext("2d");
+var previewData = canvasContext.createImageData(160,160);
+for (var i = 0; i < previewData.data.length; i+= 4) {
+    previewData.data[i+0] = 0;
+    previewData.data[i+1] = 0;
+    previewData.data[i+2] = 0;
+    previewData.data[i+3] = 0;
+}
+canvasContext.putImageData(previewData,0,0);
+previewContainer.appendChild(canvas);
 
-
-
+document.body.appendChild(previewContainer);
 
 // MARK: Page Footer
-var pageFooter = document.createElement("footer");
-var copyright = document.createElement("p");
-copyright.innerHTML = "&copy; Rob Hageboeck 2020";
-copyright.style = "text-align:center;"
-pageFooter.appendChild(copyright);
+// Handled via PHP rendering
+// var pageFooter = document.createElement("footer");
+// var copyright = document.createElement("p");
+// copyright.innerHTML = "&copy; Rob Hageboeck 2020";
+// copyright.style = "text-align:center;"
+// pageFooter.appendChild(copyright);
 
 
-document.body.appendChild(pageFooter);
+// document.body.appendChild(pageFooter);
