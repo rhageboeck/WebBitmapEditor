@@ -1,7 +1,7 @@
 // MARK: Constants
 let number = 16;
 var currColor = "white";
-let supportedColors = ["red","orange","green","blue","lightblue","purple","white"];
+let supportedColors = ["red","green","blue","white"];
 
 function clearGrid() {
     for (let i = 0; i < number; i++) {
@@ -9,12 +9,13 @@ function clearGrid() {
             bitmap.rows[i].cells[j].style.background = "white";
         }
     }
+    var previewData = canvasContext.createImageData(160,160);
+    canvasContext.putImageData(previewData,0,0);
 }
 
 function clickedBox(i,j) {
     // Update Table
     bitmap.rows[i].cells[j].style.background = currColor;
-    console.log(i,j);
 
     // Update Preview
     var row = 0;
