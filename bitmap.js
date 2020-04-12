@@ -1,7 +1,12 @@
-// MARK: Constants
-let X_SQUARES = 16;
-var currColor = "white";
-let supportedColors = ["red","green","blue","white"];
+// MARK: Image control variables
+var X_SQUARES = 16;
+var IMG_SIZE = 10*X_SQUARES;
+var IMG_ROW_SIZE = 100 * X_SQUARES * 4 * (16/X_SQUARES);
+var COL_WIDTH = 40 * (16/X_SQUARES);
+
+// COLOR SUPPORT
+var SUPPORTED_COLORS = [["red",255,0,0],["green",0,128,0],["blue",0,0,255],["white",255,255,255]];
+var currColor = SUPPORTED_COLORS[3];
 
 function clearGrid() {
     for (let i = 0; i < X_SQUARES; i++) {
@@ -9,30 +14,30 @@ function clearGrid() {
             bitmap.rows[i].cells[j].style.background = "white";
         }
     }
-    var previewData = canvasContext.createImageData(160,160);
+    var previewData = canvasContext.createImageData(IMG_SIZE,IMG_SIZE);
     canvasContext.putImageData(previewData,0,0);
 }
 
 function clickedBox(i,j) {
     // Update Table
-    bitmap.rows[i].cells[j].style.background = currColor;
+    bitmap.rows[i].cells[j].style.background = currColor[0];
 
     // Update Preview
     var row = 0;
     var col = 0;
-    var previewData = canvasContext.getImageData(0,0,160,160);
+    var previewData = canvasContext.getImageData(0,0,IMG_SIZE,IMG_SIZE);
     for (var index = 0; index < previewData.data.length; index += 4) {
-        if (index % 6400 == 0 && index > 0) {
+        if (index % IMG_ROW_SIZE == 0 && index > 0) {
             row += 1;
         }
-        if (index % 40 == 0 && index > 0) {
+        if (index % COL_WIDTH == 0 && index > 0) {
             col += 1;
-            col %= 16;
+            col %= X_SQUARES;
         }
         if (row == i && col == j) {
-            previewData.data[index+0] = 0;
-            previewData.data[index+1] = 0;
-            previewData.data[index+2] = 0;
+            previewData.data[index+0] = currColor[1];
+            previewData.data[index+1] = currColor[2];
+            previewData.data[index+2] = currColor[3];
             previewData.data[index+3] = 255;
         }
     }
@@ -62,19 +67,34 @@ var menu = document.createElement("div");
 menu.classList.add("mx-auto","mb-3");
 
 // GENERAL COLOR BUTTONS
-for (let i = 0; i < supportedColors.length; i++) {
+for (let i = 0; i < SUPPORTED_COLORS.length; i++) {
     var btn = document.createElement("button");
-    btn.innerHTML = supportedColors[i].toUpperCase();
-    btn.style.background = supportedColors[i];
+    btn.innerHTML = SUPPORTED_COLORS[i][0].toUpperCase();
+    btn.style.background = SUPPORTED_COLORS[i][0];
     btn.classList.add("menuButton","col-sm-2","mb-2");
     btn.onclick = function() {
-        currColor = supportedColors[i];
+        currColor = SUPPORTED_COLORS[i];
     }
-    if (supportedColors[i] == "white") {
+    if (SUPPORTED_COLORS[i][0] == "white") {
         btn.style.color = "black";
     }
     menu.appendChild(btn);
 }
+
+// for (var NAME in BUILT_IN_COLORS) {
+//     var btn = document.createElement("button");
+//     btn.innerHTML = NAME.toUpperCase();
+//     btn.style.background = NAME;
+//     btn.classList.add("menuButton","col-sm-2","mb-2");
+//     btn.onclick = function() {
+//         currColor = NAME+"";
+//     }
+//     if (NAME == "white") {
+//         btn.style.color = "black";
+//     }
+//     menu.appendChild(btn);
+// }
+
 // SPECIAL BUTTONS
 var clrbtn = document.createElement("button");
 clrbtn.innerHTML = "CLEAR";
