@@ -1,11 +1,11 @@
 // MARK: Constants
-let number = 16;
+let X_SQUARES = 16;
 var currColor = "white";
 let supportedColors = ["red","green","blue","white"];
 
 function clearGrid() {
-    for (let i = 0; i < number; i++) {
-        for (let j = 0; j < number; j++) {
+    for (let i = 0; i < X_SQUARES; i++) {
+        for (let j = 0; j < X_SQUARES; j++) {
             bitmap.rows[i].cells[j].style.background = "white";
         }
     }
@@ -91,11 +91,11 @@ pageBody.appendChild(menu);
 // MARK: BITMAP
 var bitmap = document.createElement("table");
 bitmap.classList.add("mx-auto");
-for (let i = 0; i < number; i++) {
+for (let i = 0; i < X_SQUARES; i++) {
     var row = document.createElement("tr");
-    for (let j = 0; j < number; j++) {
+    for (let j = 0; j < X_SQUARES; j++) {
         var cell = document.createElement("td");
-        if (j < number-1) {
+        if (j < X_SQUARES-1) {
             cell.classList.add("innercell");
         }
         cell.onclick = function () {
